@@ -62,7 +62,7 @@ public class ProducerTest {
 			System.out.println("routingKey = " + routingKey);
 		});
 		//成功发给Exchange和Queue:如果成功，return没有反馈
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 10000; i++) {
 			rabbitTemplate.convertAndSend("queueExchange", "queueConfirm", "成功发给Exchange和Queue" + i);
 		}
 

@@ -19,10 +19,10 @@
     <context:component-scan base-package="com.atguigu.listener"/>
 
     <!-- 配置监听器容器，指定监听器监听哪个队列-->
-    <rabbit:listener-container acknowledge="manual" connection-factory="connectionFactory" prefetch="3">
+    <rabbit:listener-container acknowledge="auto" connection-factory="connectionFactory" prefetch="3">
         <!--        <rabbit:listener ref="ackListener" queue-names="queueConfirm"/>-->
-        <rabbit:listener ref="manualAckListener" queue-names="queueConfirm"/>
-        <!--        <rabbit:listener ref="qosListener" queue-names="test_confirm_queue"/>-->
+        <!--        <rabbit:listener ref="manualAckListener" queue-names="queueConfirm"/>-->
+        <rabbit:listener ref="qosListener" queue-names="queueConfirm"/>
         <!--        <rabbit:listener ref="dlxListener" queue-names="test_queue_dlx"/>-->
     </rabbit:listener-container>
 </beans>
