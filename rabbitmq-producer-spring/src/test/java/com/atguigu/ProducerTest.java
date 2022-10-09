@@ -92,4 +92,31 @@ public class ProducerTest {
 		}
 		System.out.println("消息发送完毕");
 	}
+
+	/*死信队列过期时间*/
+	@Test
+	public void testdlx1() {
+		rabbitTemplate.convertAndSend("exchangedlx", "dlx.ttl", "测试消息过期进入死信队列");
+	}
+
+	/*死信队列超出长度*/
+	@Test
+	public void testdlx2() {
+		for (int i = 0; i < 100; i++) {
+			this.rabbitTemplate.convertAndSend("exchangedlx", "dlx.maxlength", "测试消息超过队列存储消息的长度进入死信队列" + i);
+		}
+		try {
+			Thread.sleep(7000);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		this.rabbitTemplate.convertAndSend("exchangedlx", "dlx.maxlength", "测试消息超过队列存储消息的长度进入死信队列");
+
+	}
+
+	/*死信队列消息拒收*/
+	@Test
+	public void testdlx3() {
+		rabbitTemplate.convertAndSend("exchangedlx", "dlx.refuse", "测试手动确认拒收进入死信队列");
+	}
 }

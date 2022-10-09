@@ -49,4 +49,34 @@
             <rabbit:binding pattern="ttl.#" queue="queuettl"/>
         </rabbit:bindings>
     </rabbit:topic-exchange>
+
+    <!--dlx-->
+    <!--正常队列和交换机绑定-->
+    <rabbit:queue name="queuedlx" id="queuedlx">
+        <rabbit:queue-arguments>
+            <!--死信交换机名称-->
+            <entry key="x-dead-letter-exchange" value="dlxexchange"/>
+            <!--死信交换机路由-->
+            <entry key="x-dead-letter-routing-key" value="dlx.dlx"/>
+            <!--其他死信参数-->
+            <!--设置队列的过期时间 ttl-->
+            <entry key="x-message-ttl" value="10000" value-type="java.lang.Integer"/>
+            <!--            设置队列的长度限制 max-length -->
+            <entry key="x-max-length" value="10" value-type="java.lang.Integer"/>
+        </rabbit:queue-arguments>
+    </rabbit:queue>
+    <!--正常交换机-->
+    <rabbit:topic-exchange name="exchangedlx">
+        <rabbit:bindings>
+            <rabbit:binding pattern="test.dlx.#" queue="queuedlx"/>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
+
+    <!--死信队列和死信交换机-->
+    <rabbit:queue name="dlxqueue" id="dlxqueue"/>
+    <rabbit:topic-exchange name="dlxexchange">
+        <rabbit:bindings>
+            <rabbit:binding pattern="dlx.#" queue="dlxqueue"/>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
 </beans>
