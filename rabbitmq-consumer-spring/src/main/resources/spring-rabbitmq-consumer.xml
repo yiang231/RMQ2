@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit.xsd">
+
+    <!--加载配置文件-->
+    <context:property-placeholder location="classpath:rabbitmq.properties"/>
+
+    <!-- 定义rabbitmq connectionFactory -->
+    <rabbit:connection-factory id="connectionFactory" host="${rabbitmq.host}"
+                               port="${rabbitmq.port}"
+                               username="${rabbitmq.username}"
+                               password="${rabbitmq.password}"
+                               virtual-host="${rabbitmq.virtual-host}"/>
+
+    <!-- 配置监听器-->
+    <context:component-scan base-package="com.atguigu.listener"/>
+
+    <!-- 配置监听器容器，指定监听器监听哪个队列-->
+    <rabbit:listener-container acknowledge="manual" connection-factory="connectionFactory" prefetch="3">
+        <!--        <rabbit:listener ref="ackListener" queue-names="queueConfirm"/>-->
+        <rabbit:listener ref="manualAckListener" queue-names="queueConfirm"/>
+        <!--        <rabbit:listener ref="qosListener" queue-names="test_confirm_queue"/>-->
+        <!--        <rabbit:listener ref="dlxListener" queue-names="test_queue_dlx"/>-->
+    </rabbit:listener-container>
+</beans>

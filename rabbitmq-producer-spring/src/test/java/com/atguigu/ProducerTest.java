@@ -62,14 +62,14 @@ public class ProducerTest {
 			System.out.println("routingKey = " + routingKey);
 		});
 		//成功发给Exchange和Queue:如果成功，return没有反馈
-		/*for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 10; i++) {
 			rabbitTemplate.convertAndSend("queueExchange", "queueConfirm", "成功发给Exchange和Queue" + i);
-		}*/
+		}
 
 		//交换机正确，队列错误
-		for (int i = 0; i < 10; i++) {
+		/*for (int i = 0; i < 10; i++) {
 			rabbitTemplate.convertAndSend("queueExchange", "queueconfirm", "交换机正确，队列错误");
-		}
+		}*/
 
 		System.out.println("消息发送完毕");
 	}
