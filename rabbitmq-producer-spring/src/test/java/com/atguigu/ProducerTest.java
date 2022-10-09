@@ -2,6 +2,7 @@ package com.atguigu;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,33 @@ public class ProducerTest {
 		//交换机正确，队列错误
 		//rabbitTemplate.convertAndSend("queueExchange", "queueconfirm", "交换机正确，队列错误");
 		//交换机和队列都错误
-		rabbitTemplate.convertAndSend("queueexchange", "queueconfirm", "交换机和队列都错误");
+		//rabbitTemplate.convertAndSend("queueexchange", "queueconfirm", "交换机和队列都错误");
 	}
 
+	//回退模式
+	@Test
+	public void testReturn() {
+		//Mandatory 代理 委托  只有配置该项，return模式才会返回消息
+		rabbitTemplate.setMandatory(true);
+		rabbitTemplate.setReturnCallback((Message message, int replyCode, String replyText,
+										  String exchange, String routingKey) -> {
+			System.out.println("message = " + new String(message.getBody()));
+			System.out.println("message.getMessageProperties() = " + message.getMessageProperties());
+			System.out.println("replyCode = " + replyCode);
+			System.out.println("replyText = " + replyText);
+			System.out.println("exchange = " + exchange);
+			System.out.println("routingKey = " + routingKey);
+		});
+		//成功发给Exchange和Queue:如果成功，return没有反馈
+		/*for (int i = 0; i < 10; i++) {
+			rabbitTemplate.convertAndSend("queueExchange", "queueConfirm", "成功发给Exchange和Queue" + i);
+		}*/
+
+		//交换机正确，队列错误
+		for (int i = 0; i < 10; i++) {
+			rabbitTemplate.convertAndSend("queueExchange", "queueconfirm", "交换机正确，队列错误");
+		}
+
+		System.out.println("消息发送完毕");
+	}
 }
