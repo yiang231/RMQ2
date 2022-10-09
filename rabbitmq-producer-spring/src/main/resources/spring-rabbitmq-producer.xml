@@ -36,4 +36,17 @@
         </rabbit:bindings>
     </rabbit:direct-exchange>
 
+    <!--TTL过期时间-->
+    <!--ttl队列-->
+    <rabbit:queue name="queuettl" id="queuettl">
+        <rabbit:queue-arguments>
+            <entry key="x-message-ttl" value="15000" value-type="java.lang.Integer"/>
+        </rabbit:queue-arguments>
+    </rabbit:queue>
+    <!--ttl交换机-->
+    <rabbit:topic-exchange name="topicExchange">
+        <rabbit:bindings>
+            <rabbit:binding pattern="ttl.#" queue="queuettl"/>
+        </rabbit:bindings>
+    </rabbit:topic-exchange>
 </beans>

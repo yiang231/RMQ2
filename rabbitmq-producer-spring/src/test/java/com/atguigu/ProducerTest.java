@@ -3,6 +3,7 @@ package com.atguigu;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessagePostProcessor;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +72,24 @@ public class ProducerTest {
 			rabbitTemplate.convertAndSend("queueExchange", "queueconfirm", "交换机正确，队列错误");
 		}*/
 
+		System.out.println("消息发送完毕");
+	}
+
+	@Test
+	public void testttl() {
+		MessagePostProcessor messagePostProcessor = (Message message) -> {
+			message.getMessageProperties().setExpiration("50000");
+			return message;
+		};
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		//成功发给Exchange和Queue:如果成功，return没有反馈
+		for (int i = 0; i < 10; i++) {
+			rabbitTemplate.convertAndSend("topicExchange", "ttl.a", "ttl成功发给Exchange和Queue" + i, messagePostProcessor);
+		}
 		System.out.println("消息发送完毕");
 	}
 }
