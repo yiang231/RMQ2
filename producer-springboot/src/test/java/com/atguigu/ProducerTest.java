@@ -4,15 +4,16 @@ import com.atguigu.config.RabbitMQConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import javax.annotation.Resource;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class ProducerTest {
 
-	@Autowired
+	@Resource
 	private RabbitTemplate rabbitTemplate;
 
 	/**
@@ -22,6 +23,7 @@ public class ProducerTest {
 	 */
 	@Test
 	public void testSend() {
-		rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, "boot.haha", "mq hello");
+		rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, "springboot.rabbit.haha", "mq1 hello");
+		rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, "lazy.rabbit.haha", "mq12 hello");
 	}
 }
